@@ -1,7 +1,15 @@
-/**
- * This file is loaded via the <script> tag in the index.html file and will
- * be executed in the renderer process for that window. No Node.js APIs are
- * available in this process because `nodeIntegration` is turned off and
- * `contextIsolation` is turned on. Use the contextBridge API in `preload.js`
- * to expose Node.js functionality from the main process.
- */
+async function loadDocx(docxData) {
+    window.main.loadDocxFile(docxData);
+}
+
+docxLoadBtn.onclick = function () {
+    loadDocx("1.docx");
+};
+
+window.addEventListener("message", (event) => {
+    if (event.source === window) {
+        let docxBlob = event.data;
+        docx.renderAsync(docxBlob, document.getElementById("docxViewer"))
+            .then(x => console.log("docx: finished"));
+    }
+});

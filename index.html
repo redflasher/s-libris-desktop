@@ -6,12 +6,22 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
     <link href="./styles.css" rel="stylesheet">
     <title>Hello World!</title>
+
+    <!--optional polyfill for promise-->
+<!--    <script src="./node_modules/promise-polyfill/dist/polyfill.min.js"></script>-->
+    <!--lib uses jszip-->
+    <script src="./node_modules/jszip/dist/jszip.min.js"></script>
+    <script src="./node_modules/docx-preview/dist/docx-preview.min.js"></script>
   </head>
   <body>
-    <h1>Hello World!</h1>
+    <h1>Hello World! Привет, Мир!</h1>
     We are using Node.js <span id="node-version"></span>,
     Chromium <span id="chrome-version"></span>,
     and Electron <span id="electron-version"></span>.
+
+    <button id="docxLoadBtn">docx load</button>
+
+    <div id="docxViewer"></div>
 
     <!-- You can also require other files to run in this process -->
     <script src="./renderer.js"></script>

@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, dialog, ipcMain } = require('electron')
 const path = require('node:path')
+const fs = require('fs')
 
 function createWindow () {
   // Create the browser window.
@@ -13,7 +14,7 @@ function createWindow () {
   })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('index.html');
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -24,6 +25,12 @@ function createWindow () {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow()
+
+  ipcMain.handle('loadDocxFile', async (event, docxData) => {
+    let pathToDocxFile = path.join(__dirname, "data/", docxData);
+    const file = fs.readFileSync(pathToDocxFile);
+    return file.buffer;
+  });
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
