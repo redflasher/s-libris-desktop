@@ -1,0 +1,33 @@
+Sub doc2docx()
+    OpenDocuments
+End Sub
+
+Sub OpenDocuments()
+    Dim folderWithDocx As String
+    folderWithDocx = "c:\doc_from_here\"
+    
+    Dim fs, f, f1, fc, s
+    Set fs = CreateObject("Scripting.FileSystemObject")
+    Set f = fs.GetFolder(folderWithDocx)
+    Set fc = f.files
+    For Each f1 In fc
+        Documents.Open (folderWithDocx + f1.Name)
+        saveDocx (f1.Name)
+        ActiveDocument.Close
+    Next
+End Sub
+
+Sub saveDocx(filename)
+    filename = Split(filename, ".")(0) + ".docx"
+    Dim fileNameForSave As String
+    fileNameForSave = "c:\docx_to_here\" + filename
+    
+    ActiveDocument.SaveAs2 filename:=fileNameForSave, FileFormat:=wdFormatDocumentDefault, _
+        LockComments:=False, Password:="", AddToRecentFiles:=True, WritePassword _
+        :="", ReadOnlyRecommended:=False, EmbedTrueTypeFonts:=False, _
+        SaveNativePictureFormat:=False, SaveFormsData:=False, SaveAsAOCELetter:= _
+        False, CompatibilityMode:=0
+End Sub
+
+
+

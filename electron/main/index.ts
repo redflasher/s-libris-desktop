@@ -1,6 +1,10 @@
 import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
+const { app, BrowserWindow, ipcMain } = require('electron')
+const path = require('node:path')
+const fs = require('fs')
+const initSqlJs = require('sql.js');
 
 // The built directory structure
 //
@@ -51,6 +55,7 @@ async function createWindow() {
       // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
       nodeIntegration: true,
       contextIsolation: false,
+      zoomFactor: 1
     },
   })
 
@@ -75,7 +80,97 @@ async function createWindow() {
   // win.webContents.on('will-navigate', (event, url) => { }) #344
 }
 
-app.whenReady().then(createWindow)
+
+async function dbInit() {
+  const filebuffer = fs.readFileSync('LINKER.db');
+  return initSqlJs().then(function(SQL) {
+    return new Promise(resolve => {
+      // Load the db
+      const db = new SQL.Database(filebuffer);
+      resolve(db);
+    });
+  });
+}
+
+function loadGroupsList(_db) {
+  const stmt = _db.prepare("SELECT * FROM CHECK_LIST_GROUP");
+  let checkLists = [];
+  while(stmt.step()) { //
+    const row = stmt.getAsObject();
+    checkLists.push(row);
+  }
+  return checkLists;
+}
+
+function loadCoursesList(_db, checkListId) {
+  const stmt = _db.prepare("SELECT * FROM CHECK_LIST WHERE ID_GROUP=$checkListId");
+  stmt.bind({$checkListId:checkListId});
+  let coursesList = [];
+  while(stmt.step()) { //
+    const row = stmt.getAsObject();
+    coursesList.push(row);
+  }
+  return coursesList;
+}
+
+function loadCourseList(_db, courseId) {
+  let sqlRaw = "SELECT m.ID as ID, m.NAME as NAME, FILE_NAME as filename FROM MATERIALS m " +
+      "LEFT JOIN CHECK_LIST_DATA cld " +
+      "ON cld.ID_MATERIALS=m.ID " +
+      "WHERE cld.ID_PARENT=" + courseId +
+      " ORDER BY cld.SECTION ASC";
+
+
+  const stmt = _db.prepare(sqlRaw);
+  let documentsList = [];
+  while(stmt.step()) { //
+    const row = stmt.getAsObject();
+    documentsList.push(row);
+    console.log('loadCourseList row: ' + JSON.stringify(row));
+  }
+  return documentsList;
+}
+
+async function loadDocxFile(filename) {
+  //обработка строки с путем до файла
+  console.log("loadDocxFile.filename", filename)
+  let filenameArr = filename.split("\\");
+  filename = filenameArr[filenameArr.length-1];
+  filename = filename.split(".doc")[0] + ".docx";
+  let pathToDocxFile = path.join("data/", filename);
+  console.log("pathToDocxFile", __dirname, __filename, pathToDocxFile)
+  const file = fs.readFileSync(pathToDocxFile);
+  return file.buffer;
+}
+
+
+
+//start app
+app.whenReady().then(() => {
+  dbInit()
+      .then(_db => {
+        console.log("_db", _db);
+        // global.db = _db;
+
+        ipcMain.handle('loadGroupsList', async (event) => {
+          return loadGroupsList(_db);
+        });
+
+        ipcMain.handle('loadCoursesList', async (event, checkListId) => {
+          return loadCoursesList(_db, checkListId);
+        });
+
+        ipcMain.handle('loadCourseList', async (event, checkListId) => {
+          return loadCourseList(_db, checkListId);
+        });
+
+        ipcMain.handle('loadDocxFile', async (event, filename) => {
+          return loadDocxFile(filename);
+        });
+
+        createWindow()
+      })
+})
 
 app.on('window-all-closed', () => {
   win = null
