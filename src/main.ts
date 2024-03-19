@@ -22,7 +22,7 @@ import * as bootstrap from 'node_modules/bootstrap';
 // Каждый маршрут должен быть связан с компонентом.
 // О вложенных маршрутах мы поговорим позже.
 const routes = [
-    { path: '/', component: Main },
+    { path: '/', name: 'home', component: Main },
     { path: '/group/:id', name: 'group', component: Group },
     { path: '/course/:id', name: 'course', component: Course },
     { path: '/document/:filename/:title', name: 'document', component: Document },

@@ -1,8 +1,22 @@
-<script setup lang="ts">
+<script lang="js">
+import Breadcrumbs from "./components/Breadcrumbs.vue";
+import {defineComponent} from "vue";
+import {ipcRenderer} from "electron";
+
+export default defineComponent({
+  components: {
+    Breadcrumbs
+  },
+  data() {
+  },
+  mounted() {
+  },
+})
 </script>
 
 <template>
   <div class="">
+    <Breadcrumbs />
     <router-view></router-view>
   </div>
 </template>

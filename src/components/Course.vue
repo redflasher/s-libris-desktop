@@ -18,7 +18,6 @@ export default defineComponent({
 </script>
 
 <template>
-  <h2>Скачать курс одним файлом</h2>
   <div class="main-as-page-wrapper">
     <ul class="list-group list-group-flush">
       <li class="list-group-item" v-for="document in list">

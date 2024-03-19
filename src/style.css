@@ -766,7 +766,6 @@ section.docx>footer { z-index: 1; }
 
   .docx {
     padding: 0px!important;
-    padding: 16px;
     width: 100%!important;
     display: flex;
     flex-flow: column;

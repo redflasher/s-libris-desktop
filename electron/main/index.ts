@@ -44,6 +44,10 @@ const preload = join(__dirname, '../preload/index.js')
 const url = process.env.VITE_DEV_SERVER_URL
 const indexHtml = join(process.env.DIST, 'index.html')
 
+let curGroupId = -1;
+let curCourseId = -1;
+let curDocumentId = -1;
+
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
@@ -103,6 +107,7 @@ function loadGroupsList(_db) {
 }
 
 function loadCoursesList(_db, checkListId) {
+  curGroupId = checkListId;
   const stmt = _db.prepare("SELECT * FROM CHECK_LIST WHERE ID_GROUP=$checkListId");
   stmt.bind({$checkListId:checkListId});
   let coursesList = [];
@@ -114,6 +119,7 @@ function loadCoursesList(_db, checkListId) {
 }
 
 function loadCourseList(_db, courseId) {
+  curCourseId = courseId;
   let sqlRaw = "SELECT m.ID as ID, m.NAME as NAME, FILE_NAME as filename FROM MATERIALS m " +
       "LEFT JOIN CHECK_LIST_DATA cld " +
       "ON cld.ID_MATERIALS=m.ID " +
@@ -143,6 +149,47 @@ async function loadDocxFile(filename) {
   return file.buffer;
 }
 
+async function getGroupName(_db, groupId) {
+  curGroupId = groupId;
+  let sqlRaw = "SELECT NAME FROM CHECK_LIST_GROUP " +
+      "WHERE ID=" + groupId +
+      " LIMIT 1";
+  const stmt = _db.prepare(sqlRaw);
+  let groupName = [];
+  while(stmt.step()) { //
+    const row = stmt.getAsObject();
+    groupName.push(row);
+  }
+  return groupName.length > 0 ? groupName[0].NAME : '';
+}
+
+async function getCourseName(_db, courseId) {
+  curCourseId = courseId;
+  let sqlRaw = "SELECT NAME FROM CHECK_LIST " +
+      "WHERE ID=" + courseId +
+      " LIMIT 1";
+  const stmt = _db.prepare(sqlRaw);
+  let groupName = [];
+  while(stmt.step()) { //
+    const row = stmt.getAsObject();
+    groupName.push(row);
+  }
+  return groupName.length > 0 ? groupName[0].NAME : '';
+}
+
+async function getDocumentName(_db, documentId) {
+  curDocumentId = documentId;
+  let sqlRaw = "SELECT NAME FROM MATERIALS " +
+      "WHERE ID=" + documentId +
+      " LIMIT 1";
+  const stmt = _db.prepare(sqlRaw);
+  let documentName = [];
+  while(stmt.step()) { //
+    const row = stmt.getAsObject();
+    documentName.push(row);
+  }
+  return documentName.length > 0 ? documentName[0].NAME : '';
+}
 
 
 //start app
@@ -166,6 +213,18 @@ app.whenReady().then(() => {
 
         ipcMain.handle('loadDocxFile', async (event, filename) => {
           return loadDocxFile(filename);
+        });
+
+        ipcMain.handle('getGroupName', async (event, groupId) => {
+          return getGroupName(_db, groupId);
+        });
+
+        ipcMain.handle('getCourseName', async (event, courseId) => {
+          return getCourseName(_db, courseId);
+        });
+
+        ipcMain.handle('getDocumentName', async (event, docId) => {
+          return getDocumentName(_db, docId);
         });
 
         createWindow()
