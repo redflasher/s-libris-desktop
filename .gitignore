@@ -30,3 +30,5 @@ pnpm-lock.yaml
 yarn.lock
 /data/
 /LINKER.db
+
+out/

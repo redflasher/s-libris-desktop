@@ -19,14 +19,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <h1>{{ this.$route.params.id }}</h1>
-  <ul>
-    <li v-for="course in list">
-      <router-link :to="{ name: 'course', params: {id: course.ID}}">
-        {{course.NAME}}
-      </router-link>
-    </li>
-  </ul>
+  <div class="main-as-page-wrapper">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item" v-for="course in list">
+        <router-link class="btn btn-default" :to="{ name: 'course', params: {id: course.ID}}">
+          {{course.NAME}}
+        </router-link>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <style scoped>

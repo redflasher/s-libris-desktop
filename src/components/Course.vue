@@ -18,15 +18,16 @@ export default defineComponent({
 </script>
 
 <template>
-  <h1>{{ this.$route.params.id }}</h1>
   <h2>Скачать курс одним файлом</h2>
-  <ul>
-    <li v-for="document in list">
-      <router-link :to="{ name: 'document', params: {filename: document.filename, title: document.NAME}}">
-        {{document.NAME}}
-      </router-link>
-    </li>
-  </ul>
+  <div class="main-as-page-wrapper">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item" v-for="document in list">
+        <router-link class="btn btn-default" :to="{ name: 'document', params: {filename: document.filename, title: document.NAME}}">
+          {{document.NAME}}
+        </router-link>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <style scoped>

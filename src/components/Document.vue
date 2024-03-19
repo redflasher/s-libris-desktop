@@ -21,12 +21,32 @@ export default defineComponent({
           document.getElementById("docxViewer"),
           null,
       {
-        // ignoreWidth: true,
-        ignoreHeight: true,
-        breakPages: true
-        // breakPages: true
+        inWrapper: true, //enables rendering of wrapper around document content
+        ignoreWidth: false, //disables rendering width of page
+        ignoreHeight: false, //disables rendering height of page
+        ignoreFonts: false, //disables fonts rendering
+        breakPages:  false, //enables page breaking on page breaks
+        ignoreLastRenderedPageBreak: true, //disables page breaking on lastRenderedPageBreak elements
+        experimental:  false, //enables experimental features (tab stops calculation)
+        trimXmlDeclaration: true, //if true, xml declaration will be removed from xml documents before parsing
+        useBase64URL: false, //if true, images, fonts, etc. will be converted to base 64 URL, otherwise URL.createObjectURL is used
+        renderChanges: false, //enables experimental rendering of document changes (inserions/deletions)
+        renderHeaders: true, //enables headers rendering
+        renderFooters: true, //enables footers rendering
+        renderFootnotes: true, //enables footnotes rendering
+        renderEndnotes: true, //enables endnotes rendering
+        debug: false, //enables additional logging
       })
-          .then(x => console.log("docx: finished"));
+          .then(x => {
+            console.log("docx: finished", x);
+            const docxElem = document.getElementsByClassName("docx-wrapper");
+            //удаляем первую пустую страницу
+            if(docxElem[0].childNodes.length > 1) {
+              const elementArray = [...docxElem[0].childNodes];
+              elementArray[0].remove();
+            }
+
+          });
     })
   },
   methods: {
@@ -61,16 +81,18 @@ const count = ref(0)
 
   курсор-закладку - справа от документа. ставится и убирается по щелчку мыши, сбоку от документа
  -->
-  <div class="content">
+  <!-- end styles -->
+  <div class="">
     <h5>{{ this.$route.params.title}}</h5>
-    <div id="docxViewer"></div>
-    <div id="styleContainer"></div>
+    <div class="d-flex ">
+      <div id="docxViewer"></div>
+    </div>
   </div>
 
 </template>
 
 <style scoped>
 .read-the-docs {
-  color: #888;
+  /*color: #888;*/
 }
 </style>

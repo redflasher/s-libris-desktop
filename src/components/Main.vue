@@ -20,13 +20,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <ul>
-    <li v-for="groupName in checkListGroups">
-      <router-link :to="{ name: 'group', params: {id: groupName.ID}}">
+  <div class="main-as-page-wrapper">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item" v-for="groupName in checkListGroups">
+      <router-link class="btn btn-default" :to="{ name: 'group', params: {id: groupName.ID}}">
         {{groupName.NAME}}
       </router-link>
     </li>
   </ul>
+  </div>
 </template>
 
 <style scoped>
