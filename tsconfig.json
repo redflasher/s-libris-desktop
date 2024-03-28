@@ -11,9 +11,10 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "allowJs": true
   },
-  "include": ["src"],
+  "include": ["src", "node_modules/bootstrap", "node_modules/sql.js"],
   "references": [
     { "path": "./tsconfig.node.json" }
   ]

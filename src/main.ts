@@ -10,7 +10,7 @@ import Document from "./components/Document.vue";
 // Import our custom CSS
 import './scss/styles.scss'
 // Import all of Bootstrap's JS
-import * as bootstrap from 'node_modules/bootstrap';
+import * as bootstrap from '../node_modules/bootstrap';
 
 
 // 1. Определите компоненты маршрута.
