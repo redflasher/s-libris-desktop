@@ -1,7 +1,8 @@
-import { app, BrowserWindow, shell, ipcMain } from 'electron'
+import {app, BrowserWindow, shell, ipcMain, Menu, ipcRenderer} from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow } = require('electron')
+const { ipcMain } = require('electron/main')
 const path = require('node:path')
 const fs = require('fs')
 const initSqlJs = require('sql.js');
@@ -47,6 +48,137 @@ const indexHtml = join(process.env.DIST, 'index.html')
 let curGroupId = -1;
 let curCourseId = -1;
 let curDocumentId = -1;
+
+function getMenu() {
+  //Setup menu
+  const isMac = process.platform === 'darwin'
+
+  const template = [
+    // { role: 'appMenu' }
+    ...(isMac
+        ? [{
+          label: app.name,
+          submenu: [
+            { role: 'about' },
+            { type: 'separator' },
+            { role: 'services' },
+            { type: 'separator' },
+            { role: 'hide' },
+            { role: 'hideOthers' },
+            { role: 'unhide' },
+            { type: 'separator' },
+            { role: 'quit' }
+          ]
+        }]
+        : []),
+    // { role: 'fileMenu' }
+    /*{
+      label: 'Меню',
+      submenu: [
+        isMac ? { role: 'close' } : { role: 'quit' }
+      ]
+    },*/
+    // { role: 'viewMenu' }
+    {
+      label: 'Вид',
+      submenu: [
+        { label: 'Масштаб на 100%', role: 'resetZoom' },
+        { label: 'Увеличить',role: 'zoomIn' },
+        { label: 'Уменьшить', role: 'zoomOut' },
+        { type: 'separator' },
+        { label: 'Полный экран', role: 'togglefullscreen' }
+      ]
+    },
+    {
+      label: 'Поиск',
+      submenu: [
+        { label: 'Каталог',
+          click: async () => {
+          /*
+          * тут просто каталог открывается в самом меню, либо на странице.
+          * Можно страницу, разделенную на несколько столбцов,
+          * наподобие как на маках.
+          * */
+          }
+        },
+        { label: 'По названию документов',
+          accelerator: process.platform === 'darwin' ? 'Cmd+F' : 'Ctrl+F',
+          click: async () => {
+            win.webContents.send("mainToRender", "show:ByNameSearchPage");
+          /*
+          * Тут просто поле ввода текста
+          * и в выдаче:
+          * тип документа,
+          * название,
+          * год публикации.
+          *
+          * Фильтрация по типу документов.
+          * Сортировка по алфавиту, по дате, по объему текста.
+          * */
+          }
+        },
+        { label: 'По содержимому документов',
+          click: async () => {
+          /*
+          * тут опции:
+          * доп. ограничения по дате,
+          * по типу документа,
+          * по диапазону годов.
+          *
+          * Фильтрация по типу документов.
+          * Сортировка по алфавиту, по дате, по объему текста.
+          * */
+            // const { shell } = require('electron')
+            // await shell.openExternal('https://slibris.ru')
+          }
+        },
+        { label: 'По календарю',
+          click: async () => {
+          /*
+          * Тут календарь с количеством документов за каждый год и за каждый месяц,
+          * по мере погружения в календарь.
+          *
+          * Фильтрация по типу документов.
+          * */
+            // const { shell } = require('electron')
+            // await shell.openExternal('https://slibris.ru')
+          }
+        },
+
+      ]
+    },
+    /*{
+      label: 'Настройки',
+      submenu: [
+        {
+          label: 'Сменить язык',
+          accelerator: process.platform === 'darwin' ? 'Cmd+Tab' : 'Ctrl+Tab',
+          click: async () => {
+            win.webContents.send("mainToRender", "lang:toggle");
+          }
+        }
+      ]
+      /!*click: async () => {
+        const { shell } = require('electron')
+        await shell.openExternal('https://slibris.ru')
+      }*!/
+    },*/
+    {
+      label: '?',
+      role: 'help',
+      submenu: [
+        {
+          label: 'Сайт программы',
+          click: async () => {
+            const { shell } = require('electron')
+            await shell.openExternal('https://slibris.ru')
+          }
+        }
+      ]
+    }
+  ];
+  return template;
+}
 
 async function createWindow() {
   win = new BrowserWindow({
@@ -228,8 +360,12 @@ app.whenReady().then(() => {
         });
 
         createWindow()
-      })
-})
+
+        //menu
+        const menu = Menu.buildFromTemplate(getMenu());
+        Menu.setApplicationMenu(menu);
+      });
+});
 
 app.on('window-all-closed', () => {
   win = null

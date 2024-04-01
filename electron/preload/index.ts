@@ -90,3 +90,11 @@ window.onmessage = (ev) => {
 }
 
 setTimeout(removeLoading, 4999)
+
+
+/////
+const { ipcRenderer } = require('electron/renderer');
+
+ipcRenderer.on('mainToRender',(event, msg) => {
+  window.postMessage(msg, "*");
+})
