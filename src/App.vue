@@ -1,25 +1,52 @@
-<script lang="js">
-import Breadcrumbs from "./components/Breadcrumbs.vue";
-import {defineComponent} from "vue";
-import {ipcRenderer} from "electron";
-
-export default defineComponent({
-  components: {
-    Breadcrumbs
-  },
-  data() {
-  },
-  mounted() {
-  },
-})
-</script>
-
 <template>
   <div class="">
-    <Breadcrumbs />
-    <router-view></router-view>
+    <ByNameSearchPage v-if="showByNameSearchPage" />
+    <div v-show="showMainContent">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
+
+<script lang="js">
+import {defineComponent} from "vue";
+import ByNameSearchPage from "./components/ByNameSearchPage.vue";
+
+export default defineComponent({
+  name: "App",
+  components: {
+    ByNameSearchPage
+  },
+  data() {
+    return {
+      showByNameSearchPage: false
+    }
+  },
+  computed: {
+    showMainContent() {
+      return !this.showByNameSearchPage;
+    }
+  },
+  unmounted() {
+      window.removeEventListener("message", this.preloadHandler);
+  },
+  mounted() {
+    let self = this;
+    window.addEventListener("message", this.preloadHandler)
+  },
+  methods: {
+    preloadHandler(event) {
+      if (event.source !== window) return;
+
+      switch (event.data) {
+        case "show:ByNameSearchPage": {
+          this.showByNameSearchPage = !this.showByNameSearchPage;
+          break;
+        }
+      }
+    }
+  }
+})
+</script>
 
 <style>
 .flex-center {

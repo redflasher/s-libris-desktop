@@ -184,6 +184,8 @@ async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
     icon: join(process.env.VITE_PUBLIC, 'favicon.ico'),
+    minWidth: 800,
+    width:800,
     webPreferences: {
       preload,
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
@@ -323,9 +325,38 @@ async function getDocumentName(_db, documentId) {
   return documentName.length > 0 ? documentName[0].NAME : '';
 }
 
+async function searchDocsByName(_db, searchText, isFromStartOnly, isSortByName) {
+  let stmt;
+  let sortSqlText;
+
+  if (isSortByName) {
+    sortSqlText = "ORDER BY NAME COLLATE NOCASE, LENGTH(NAME) ";
+  } else {
+    sortSqlText = "ORDER BY DATE_MATERIALS ASC ";
+  }
+  //info: можно добавить в меню "инструменты" и там "словарь", "админ словарь" и пр.
+  if(isFromStartOnly) {
+    stmt = _db.prepare("SELECT NAME, DATE_MATERIALS, FILE_NAME FROM MATERIALS " +
+        "WHERE NAME LIKE '" + searchText.toUpperCase() + "%' " +
+        sortSqlText +
+        "LIMIT 1000");
+  } else {
+    stmt = _db.prepare("SELECT NAME, DATE_MATERIALS, FILE_NAME FROM MATERIALS " +
+        "WHERE NAME LIKE '%" + searchText.toUpperCase() + "%' " +
+        sortSqlText +
+        "LIMIT 1000");
+  }
+  let checkLists = [];
+  while(stmt.step()) { //
+    const row = stmt.getAsObject();
+    checkLists.push(row);
+  }
+  return checkLists;
+}
+
 
 //start app
-app.whenReady().then(() => {
+app.on('ready', () => {
   dbInit()
       .then(_db => {
         console.log("_db", _db);
@@ -357,6 +388,13 @@ app.whenReady().then(() => {
 
         ipcMain.handle('getDocumentName', async (event, docId) => {
           return getDocumentName(_db, docId);
+        });
+
+        ipcMain.handle('searchDocsByName', async (event,
+                                                  searchText,
+                                                  _isFromStartOnly,
+                                                  isSortByName) => {
+          return searchDocsByName(_db, searchText,_isFromStartOnly, isSortByName);
         });
 
         createWindow()
