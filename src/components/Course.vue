@@ -14,6 +14,15 @@ export default defineComponent({
       self.list = _checkList;
     })
   },
+  methods: {
+    preparedTitle(_val) {
+      let result = _val;
+      result = result.toLowerCase();
+      result = result.replace(/[^a-zA-Zа-яА-ЯёЁ0-9:.,;:&%?!#$+-\/\]\[() ]/g, "");
+      result = result.charAt(0).toUpperCase() + result.slice(1);
+      return result;
+    }
+  }
 })
 </script>
 
@@ -22,7 +31,7 @@ export default defineComponent({
     <ul class="list-group list-group-flush">
       <li class="list-group-item" v-for="document in list">
         <router-link class="btn btn-default" :to="{ name: 'document', params: {filename: document.filename, title: document.NAME}}">
-          {{document.NAME}}
+          {{preparedTitle(document.NAME)}}
         </router-link>
       </li>
     </ul>

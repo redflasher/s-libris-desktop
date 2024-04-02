@@ -756,9 +756,6 @@ section.docx>footer { z-index: 1; }
 }
 
 @media screen and (min-width: 320px) and (max-width: 900px) {
-  body {
-    background-color: #EE4266!important; /* Красный фон */
-  }
 
   section.docx li {
     padding: 16px!important;
