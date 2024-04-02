@@ -82,11 +82,11 @@ function getMenu() {
     {
       label: 'Вид',
       submenu: [
-        { label: 'Масштаб на 100%', role: 'resetZoom' },
-        { label: 'Увеличить',role: 'zoomIn' },
-        { label: 'Уменьшить', role: 'zoomOut' },
+        { label: 'Масштаб на 100%', role: 'resetZoom' , accelerator: process.platform === 'darwin' ? 'Cmd+0' : 'Ctrl+0',},
+        { label: 'Увеличить',role: 'zoomIn' , accelerator: process.platform === 'darwin' ? 'Cmd+up' : 'Ctrl+up',},
+        { label: 'Уменьшить', role: 'zoomOut' , accelerator: process.platform === 'darwin' ? 'Cmd+down' : 'Ctrl+down',},
         { type: 'separator' },
-        { label: 'Полный экран', role: 'togglefullscreen' }
+        { label: 'Полный экран', role: 'togglefullscreen', accelerator: 'F11' }
       ]
     },
     {
