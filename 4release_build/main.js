@@ -10,8 +10,6 @@ const preloadPath = path.join(__dirname, './preload.js');
 console.log("preload.js", preloadPath);
 let win = null
 
-// Disable GPU Acceleration for Windows 7
-if (release().startsWith('6.1')) app.disableHardwareAcceleration()
 // Set application name for Windows 10+ notifications
 if (process.platform === 'win32') app.setAppUserModelId(app.getName())
 if (!app.requestSingleInstanceLock()) {
@@ -221,12 +219,28 @@ function loadCourseList(_db, courseId) {
     return documentsList;
 }
 
+/**
+ * @deprecated
+ * */
+async function loadDocxFile(filename) {
+    //обработка строки с путем до файла
+    console.log("loadDocxFile.filename", filename)
+
+    let filenameArr = filename.split("\\");
+    filename = filenameArr[filenameArr.length-1];
+    filename = filename.split(".doc")[0] + ".docx";
+    let pathToDocxFile = path.join(DATA_DIR_PATH, filename);
+    console.log("pathToDocxFile", __dirname, __filename, pathToDocxFile)
+    const file = fs.readFileSync(pathToDocxFile);
+    return file.buffer;
+}
+
 async function loadDocxFileByFilename(filename) {
     //обработка строки с путем до файла
     let filenameArr = filename.split("\\");
     filename = filenameArr[filenameArr.length-1];
     filename = filename.split(".doc")[0] + ".docx";
-    let pathToDocxFile = path.join("data/", filename);
+    let pathToDocxFile = path.join(DATA_DIR_PATH, filename);
     console.log("pathToDocxFile", pathToDocxFile);
     const file = fs.readFileSync(pathToDocxFile);
     return file.buffer;
@@ -247,7 +261,7 @@ async function loadDocxFileById(_db, id) {
     let filenameArr = filename.split("\\");
     filename = filenameArr[filenameArr.length-1];
     filename = filename.split(".doc")[0] + ".docx";
-    let pathToDocxFile = path.join("data/", filename);
+    let pathToDocxFile = path.join(DATA_DIR_PATH, filename);
     console.log("pathToDocxFile", pathToDocxFile);
     const file = fs.readFileSync(pathToDocxFile);
     console.log("file.buffer.length", file.buffer.length);
