@@ -1,5 +1,8 @@
 <template>
   <div class="main">
+    <div class="close_btn">
+      <button v-on:click="goBack()" type="button" class="btn-close" aria-label="Close"></button>
+    </div>
     <div class="container h-100">
       <div class="row">
         <div class="d-flex justify-content-center h-100">
@@ -70,11 +73,13 @@ export default defineComponent ({
     this.$nextTick(() => {
       self.onStartCss = 'searchbar_hover';
       self.$refs.search_input.focus();
+      window.addEventListener('keydown', event => this.goBack(event));
     });
   },
   unmounted() {
     this.onStartCss = '';
     this.searhTextModel = '';
+  window.removeEventListener('keydown', event => this.goBack(event));
   },
 
   watch: {
@@ -91,6 +96,14 @@ export default defineComponent ({
     }
   },
   methods: {
+    goBack(e) {
+      if (e.key == 'Escape') {
+        window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
+      }
+    },
+    goBack() {
+      window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
+    },
     autoSearch() {
       if (this.searhTextModel.length < 1) return;
       this.searchText();
@@ -160,6 +173,16 @@ body,html{
   text-decoration:none;
 }
 
+.close_btn {
+  background-color: #eeeeee;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  z-index: 1;
+  padding: 0;
+  margin: 0;
+}
+
 .main {
   background-color: #eeeeee;
   overflow: scroll;
@@ -203,7 +226,7 @@ input.form-check-input:checked {
   background-color: #353b48;
 }
 
-.form-check-input:focus {
+.btn-close:focus, .form-check-input:focus {
   border-color: #000;
   outline: 1;
   box-shadow: 0 0 0 0.1rem rgba(13, 110, 253, 0);
