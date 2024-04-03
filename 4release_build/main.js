@@ -202,7 +202,7 @@ function loadCoursesList(_db, checkListId) {
 
 function loadCourseList(_db, courseId) {
     curCourseId = courseId;
-    let sqlRaw = "SELECT m.ID as ID, m.NAME as NAME, FILE_NAME as filename FROM MATERIALS m " +
+    let sqlRaw = "SELECT m.ID as ID, m.NAME as NAME, m.DATE_MATERIALS as DATE_MATERIALS, FILE_NAME as filename FROM MATERIALS m " +
         "LEFT JOIN CHECK_LIST_DATA cld " +
         "ON cld.ID_MATERIALS=m.ID " +
         "WHERE cld.ID_PARENT=" + courseId +
