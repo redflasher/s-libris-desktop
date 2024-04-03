@@ -1,6 +1,6 @@
 <template>
 
-  <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+  <a href="javascript: void(0)" v-on:click="doClickAction()" class="list-group-item list-group-item-action flex-column align-items-start">
     <div class="d-flex w-100 justify-content-between">
       <small class="col-2 text-start">{{ docType }}</small>
       <h5 class="col-8 text-start docName">{{ preparedTitle }}</h5>
@@ -15,12 +15,22 @@ import {defineComponent} from "vue";
 
 export default defineComponent({
   name: "ResultSearchItem",
-  props: ['resultItem'],
+  /**
+   * resultItem - массив с элементами списка
+   * itemType - тип элемента. определяет действие при щелчке по элементу списка
+      * 'Group' - группа контрольных листов на одну тему.
+      * 'CheckList' - КЛ. при щелчке переход внутрь КЛ.
+      * 'Document' - Документ. при щелчке переход на содержимое документа.
+   */
+  props: ['resultItem', 'itemType'],
   components: {
 
   },
+  mounted() {
+  },
   computed: {
     docType() {
+      if(!this.resultItem.hasOwnProperty('FILE_NAME')) return "";
       let rawData = this.resultItem.FILE_NAME;
       if(rawData.indexOf('Admin dict') !== -1) return "Админ словарь";
       if(rawData.indexOf('Book extracts russian') !== -1) return "Фрагмент книги";
@@ -36,6 +46,7 @@ export default defineComponent({
       if(rawData.indexOf('Russian Tapes') !== -1) return "Лекция";
     },
     preparedTitle() {
+      if(!this.resultItem.hasOwnProperty('NAME')) return "-";
       let result = this.resultItem.NAME;
       result = result.toLowerCase();
       result = result.replace(/[^a-zA-Zа-яА-ЯёЁ0-9:.,;:&%?!#$+-\/\]\[() ]/g, "");
@@ -43,10 +54,40 @@ export default defineComponent({
       return result;
     },
     preparedDate() {
+      if(!this.resultItem.hasOwnProperty('DATE_MATERIALS')) return "";
       let result = this.resultItem.DATE_MATERIALS;
       if(result.length === 0) return "-";
       result = result.substr(6,2) + "/" + result.substr(4,2) + "/" + result.substr(0,4);
       return result;
+    }
+  },
+  methods: {
+    doClickAction() {
+      switch (this.itemType) {
+        case 'Group': {
+          this.$router.push({ name: 'group', params: {id: this.resultItem.ID}});
+          break;
+        }
+        case 'CheckList': {
+          this.$router.push({ name: 'course', params: {id: this.resultItem.ID}});
+          break;
+        }
+        case 'Document': {
+          this.$router.push({ name: 'document', params:
+                {filename: this.resultItem.filename, title: this.resultItem.NAME}
+          });
+          break;
+        }
+        case 'DocumentById': {
+          this.$router.push({ name: 'document-by-id', params:
+                {id: this.resultItem.ID, title: this.resultItem.NAME}
+          });
+          break;
+        }
+        default: {
+          console.log("case.default", this.itemType);
+        }
+      }
     }
   }
 })

@@ -1,7 +1,6 @@
 <template>
   <div class="">
-    <ByNameSearchPage v-if="showByNameSearchPage" />
-    <div v-show="showMainContent">
+    <div>
       <router-view></router-view>
     </div>
   </div>
@@ -9,22 +8,16 @@
 
 <script lang="js">
 import {defineComponent} from "vue";
-import ByNameSearchPage from "./components/ByNameSearchPage.vue";
 
 export default defineComponent({
   name: "App",
   components: {
-    ByNameSearchPage
   },
   data() {
     return {
-      showByNameSearchPage: false
     }
   },
   computed: {
-    showMainContent() {
-      return !this.showByNameSearchPage;
-    }
   },
   unmounted() {
       window.removeEventListener("message", this.preloadHandler);
@@ -39,7 +32,7 @@ export default defineComponent({
 
       switch (event.data) {
         case "show:ByNameSearchPage": {
-          this.showByNameSearchPage = !this.showByNameSearchPage;
+          this.$router.push({ name: 'search-by-name'});
           break;
         }
       }

@@ -4,6 +4,7 @@ import { ref, defineComponent } from 'vue'
 import {renderAsync} from 'docx-preview';
 
 export default defineComponent({
+  props: ['itemType'],
   data() {
     return {
       checkListGroups: [],
@@ -15,28 +16,41 @@ export default defineComponent({
   },
   mounted() {
     let self = this;
-    ipcRenderer.invoke('loadDocxFile', this.$route.params.filename).then(dataBlob => {
+    if(this.$route.params.hasOwnProperty("id")) {
+      ipcRenderer.invoke('loadDocxFileById', this.$route.params.id)
+          .then(dataBlob => this.docBlobRenderToPage(dataBlob));
+    } else {
+      ipcRenderer.invoke('loadDocxFileByFilename', this.$route.params.filename)
+          .then(dataBlob => this.docBlobRenderToPage(dataBlob));
+    }
+  },
+  methods: {
+    downloadFile() {
+    },
+    drugFile() {
+    },
+    docBlobRenderToPage(dataBlob) {
       // https://www.npmjs.com/package/docx-preview
       renderAsync(dataBlob,
           document.getElementById("docxViewer"),
           null,
-      {
-        inWrapper: true, //enables rendering of wrapper around document content
-        ignoreWidth: false, //disables rendering width of page
-        ignoreHeight: false, //disables rendering height of page
-        ignoreFonts: false, //disables fonts rendering
-        breakPages:  false, //enables page breaking on page breaks
-        ignoreLastRenderedPageBreak: true, //disables page breaking on lastRenderedPageBreak elements
-        experimental:  false, //enables experimental features (tab stops calculation)
-        trimXmlDeclaration: true, //if true, xml declaration will be removed from xml documents before parsing
-        useBase64URL: false, //if true, images, fonts, etc. will be converted to base 64 URL, otherwise URL.createObjectURL is used
-        renderChanges: false, //enables experimental rendering of document changes (inserions/deletions)
-        renderHeaders: true, //enables headers rendering
-        renderFooters: true, //enables footers rendering
-        renderFootnotes: true, //enables footnotes rendering
-        renderEndnotes: true, //enables endnotes rendering
-        debug: false, //enables additional logging
-      })
+          {
+            inWrapper: true, //enables rendering of wrapper around document content
+            ignoreWidth: false, //disables rendering width of page
+            ignoreHeight: false, //disables rendering height of page
+            ignoreFonts: false, //disables fonts rendering
+            breakPages:  false, //enables page breaking on page breaks
+            ignoreLastRenderedPageBreak: true, //disables page breaking on lastRenderedPageBreak elements
+            experimental:  false, //enables experimental features (tab stops calculation)
+            trimXmlDeclaration: true, //if true, xml declaration will be removed from xml documents before parsing
+            useBase64URL: false, //if true, images, fonts, etc. will be converted to base 64 URL, otherwise URL.createObjectURL is used
+            renderChanges: false, //enables experimental rendering of document changes (inserions/deletions)
+            renderHeaders: true, //enables headers rendering
+            renderFooters: true, //enables footers rendering
+            renderFootnotes: true, //enables footnotes rendering
+            renderEndnotes: true, //enables endnotes rendering
+            debug: false, //enables additional logging
+          })
           .then(x => {
             console.log("docx: finished", x);
             const docxElem = document.getElementsByClassName("docx-wrapper");
@@ -45,15 +59,7 @@ export default defineComponent({
               const elementArray = [...docxElem[0].childNodes];
               elementArray[0].remove();
             }
-
           });
-    })
-  },
-  methods: {
-    downloadFile() {
-    },
-    drugFile() {
-
     }
   }
 })

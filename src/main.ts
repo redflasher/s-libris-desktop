@@ -7,6 +7,7 @@ import Main from "./components/Main.vue";
 import Group from "./components/Group.vue";
 import Course from "./components/Course.vue";
 import Document from "./components/Document.vue";
+import ByNameSearchPage from "./components/ByNameSearchPage.vue";
 // Import our custom CSS
 import './scss/styles.scss'
 // Import all of Bootstrap's JS
@@ -23,9 +24,11 @@ import * as bootstrap from '../node_modules/bootstrap';
 // О вложенных маршрутах мы поговорим позже.
 const routes = [
     { path: '/', name: 'home', component: Main },
+    { path: '/search-by-name', name: 'search-by-name', component: ByNameSearchPage },
     { path: '/group/:id', name: 'group', component: Group },
     { path: '/course/:id', name: 'course', component: Course },
     { path: '/document/:filename/:title', name: 'document', component: Document },
+    { path: '/document/:id', name: 'document-by-id', component: Document },
 ]
 
 // 3. Создайте экземпляр маршрутизатора и передайте ему опцию `routes`

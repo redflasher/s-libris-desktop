@@ -271,15 +271,36 @@ function loadCourseList(_db, courseId) {
   return documentsList;
 }
 
-async function loadDocxFile(filename) {
+async function loadDocxFileByFilename(filename) {
   //обработка строки с путем до файла
-  console.log("loadDocxFile.filename", filename)
   let filenameArr = filename.split("\\");
   filename = filenameArr[filenameArr.length-1];
   filename = filename.split(".doc")[0] + ".docx";
   let pathToDocxFile = path.join("data/", filename);
   console.log("pathToDocxFile", __dirname, __filename, pathToDocxFile)
   const file = fs.readFileSync(pathToDocxFile);
+  return file.buffer;
+}
+
+async function loadDocxFileById(_db, id) {
+  let filename = "";
+  let sqlRaw = "SELECT NAME, FILE_NAME FROM MATERIALS m " +
+      "WHERE ID=" + id +
+      " LIMIT 1";
+  const stmt = _db.prepare(sqlRaw);
+  let documentsList = [];
+  while(stmt.step()) { //
+    const row = stmt.getAsObject();
+    documentsList.push(row);
+    filename = row.FILE_NAME;
+  }
+  let filenameArr = filename.split("\\");
+  filename = filenameArr[filenameArr.length-1];
+  filename = filename.split(".doc")[0] + ".docx";
+  let pathToDocxFile = path.join("data/", filename);
+  console.log("pathToDocxFile", pathToDocxFile);
+  const file = fs.readFileSync(pathToDocxFile);
+  console.log("file.buffer", file.buffer);
   return file.buffer;
 }
 
@@ -336,12 +357,12 @@ async function searchDocsByName(_db, searchText, isFromStartOnly, isSortByName) 
   }
   //info: можно добавить в меню "инструменты" и там "словарь", "админ словарь" и пр.
   if(isFromStartOnly) {
-    stmt = _db.prepare("SELECT NAME, DATE_MATERIALS, FILE_NAME FROM MATERIALS " +
+    stmt = _db.prepare("SELECT ID, NAME, DATE_MATERIALS, FILE_NAME FROM MATERIALS " +
         "WHERE NAME LIKE '" + searchText.toUpperCase() + "%' " +
         sortSqlText +
         "LIMIT 1000");
   } else {
-    stmt = _db.prepare("SELECT NAME, DATE_MATERIALS, FILE_NAME FROM MATERIALS " +
+    stmt = _db.prepare("SELECT ID, NAME, DATE_MATERIALS, FILE_NAME FROM MATERIALS " +
         "WHERE NAME LIKE '%" + searchText.toUpperCase() + "%' " +
         sortSqlText +
         "LIMIT 1000");
@@ -374,8 +395,12 @@ app.on('ready', () => {
           return loadCourseList(_db, checkListId);
         });
 
-        ipcMain.handle('loadDocxFile', async (event, filename) => {
-          return loadDocxFile(filename);
+        ipcMain.handle('loadDocxFileByFilename', async (event, filename) => {
+          return loadDocxFileByFilename(filename);
+        });
+
+        ipcMain.handle('loadDocxFileById', async (event, id) => {
+          return loadDocxFileById(_db, id);
         });
 
         ipcMain.handle('getGroupName', async (event, groupId) => {

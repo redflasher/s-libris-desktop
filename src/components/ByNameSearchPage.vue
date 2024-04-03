@@ -15,7 +15,7 @@
       <div class="row">
         <div class="d-flex justify-content-center h-100">
           <div class="form-check form-switch searchSetting1">
-            <input v-on:change="isFromStartSearchOnly = !isFromStartSearchOnly" v-model="isFromStartSearchOnly" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+            <input v-on:click="isFromStartSearchOnly = !isFromStartSearchOnly" v-model="isFromStartSearchOnly" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
             <label v-if="isFromStartSearchOnly" class="form-check-label container form-check-label text-start" for="flexSwitchCheckDefault">Поиск с начала названия</label>
             <label v-if="!isFromStartSearchOnly" class="form-check-label container form-check-label text-start" for="flexSwitchCheckDefault">Поиск по совпадению любой части названия</label>
           </div>
@@ -25,7 +25,7 @@
       <div class="row">
         <div class="d-flex justify-content-center h-100">
           <div class="form-check form-switch searchSetting1">
-            <input v-on:change="isSortByName = !isSortByName" v-model="isSortByName" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+            <input v-on:click="isSortByName = !isSortByName" v-model="isSortByName" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
             <label v-if="isSortByName" class="form-check-label container form-check-label text-start" for="flexSwitchCheckDefault">Сортировать по названию</label>
             <label v-if="!isSortByName" class="form-check-label container form-check-label text-start" for="flexSwitchCheckDefault">Сортировать по дате</label>
           </div>
@@ -35,7 +35,7 @@
       <hr>
       <div class="row">
         <div class="list-group">
-          <ResultSearchItem v-for="result in results" :resultItem="result" />
+          <ResultSearchItem v-for="result in results" :resultItem="result" :itemType="itemType" />
         </div>
       </div>
     </div>
@@ -57,6 +57,7 @@ export default defineComponent ({
   },
   data() {
     return {
+      itemType: "DocumentById",
       isFromStartSearchOnly: true, //выполняем поиск с начала названия или нет
       isSortByName: true, //сортируем по названию
       searhTextModel: '',

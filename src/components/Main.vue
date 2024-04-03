@@ -1,10 +1,16 @@
 <script lang="js">
 import { ipcRenderer } from 'electron'
 import { defineComponent } from 'vue'
+import ResultSearchItem from "./ResultSearchItem.vue";
 
 export default defineComponent({
+  name: "Main",
+  components: {
+    ResultSearchItem
+  },
   data() {
     return {
+      itemType: 'Group',
       checkListGroups: []
     }
   },
@@ -12,6 +18,7 @@ export default defineComponent({
   mounted() {
     let self = this;
     ipcRenderer.invoke('loadGroupsList').then(_checkListGroups => {
+      console.log("checkListGroups", _checkListGroups);
       self.checkListGroups = _checkListGroups;
     })
   },
@@ -28,19 +35,120 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="main-as-page-wrapper">
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item" v-for="groupName in checkListGroups">
-      <router-link class="btn btn-default" :to="{ name: 'group', params: {id: groupName.ID}}">
-        {{preparedTitle(groupName.NAME)}}
-      </router-link>
-    </li>
-  </ul>
+  <div class="main">
+    <div class="container h-100">
+      <h2>Основные группы материалов</h2>
+      <hr>
+      <div class="row">
+        <div class="list-group">
+          <ResultSearchItem v-for="result in checkListGroups" :resultItem="result" :itemType='itemType' />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.read-the-docs {
-  color: #888;
+
+body,html{
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #e74c3c !important;
 }
+
+.searchbar{
+  margin-bottom: auto;
+  margin-top: 32px;
+  height: 60px;
+  background-color: #353b48;
+  border-radius: 30px;
+  padding: 10px;
+}
+
+.search_input{
+  color: white;
+  border: 0;
+  outline: 0;
+  background: none;
+  width: 0;
+  caret-color:transparent;
+  line-height: 40px;
+  transition: width 0.1s linear;
+}
+
+.searchbar_hover > .search_input{
+  padding: 0 10px;
+  width: 450px;
+  caret-color:red;
+  transition: width 0.1s linear;
+}
+
+.searchbar_hover > .search_icon{
+  background: white;
+  color: #e74c3c;
+}
+
+.search_icon {
+  height: 40px;
+  width: 40px;
+  float: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color:white;
+  text-decoration:none;
+}
+
+.main {
+  background-color: #eeeeee;
+  overflow: scroll;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  padding: 0;
+  margin: 0;
+}
+
+@media screen and (min-width: 20px) and (max-width: 320px) {
+  .searchbar_hover > .search_input{
+    padding: 0 10px;
+    width: 100%;
+    caret-color:red;
+    transition: width 0.1s linear;
+  }
+
+  .search_icon {
+    height: 40px;
+    width: 40px;
+    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color:white;
+    text-decoration:none;
+  }
+}
+
+.searchSetting1 {
+  padding-top: 8px;
+  width: 500px;
+}
+
+input.form-check-input:checked {
+  background-color: #353b48;
+}
+
+.form-check-input:focus {
+  border-color: #000;
+  outline: 1;
+  box-shadow: 0 0 0 0.1rem rgba(13, 110, 253, 0);
+}
+
 </style>

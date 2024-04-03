@@ -1,10 +1,16 @@
 <script lang="js">
 import { ipcRenderer } from 'electron'
 import { defineComponent } from 'vue'
+import ResultSearchItem from "./ResultSearchItem.vue";
 
 export default defineComponent({
+  name: "Main",
+  components: {
+    ResultSearchItem
+  },
   data() {
     return {
+      itemType: 'Document',
       list: []
     }
   },
@@ -27,14 +33,16 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="main-as-page-wrapper">
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item" v-for="document in list">
-        <router-link class="btn btn-default" :to="{ name: 'document', params: {filename: document.filename, title: document.NAME}}">
-          {{preparedTitle(document.NAME)}}
-        </router-link>
-      </li>
-    </ul>
+  <div class="main">
+    <div class="container h-100">
+      <h2>Основные группы материалов</h2>
+      <hr>
+      <div class="row">
+        <div class="list-group">
+          <ResultSearchItem v-for="result in list" :resultItem="result" :itemType='itemType' />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
