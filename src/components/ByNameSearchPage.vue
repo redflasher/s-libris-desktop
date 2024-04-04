@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="close_btn">
-      <button v-on:click="goBack()" type="button" class="btn-close" aria-label="Close"></button>
+      <button v-on:click="goBackBtn()" type="button" class="btn-close" aria-label="Close"></button>
     </div>
     <div class="container h-100">
       <div class="row">
@@ -101,7 +101,7 @@ export default defineComponent ({
         window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
       }
     },
-    goBack() {
+    goBackBtn() {
       window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
     },
     autoSearch() {

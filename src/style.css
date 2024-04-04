@@ -796,3 +796,17 @@ section.docx>footer { z-index: 1; }
   }
 
 }
+
+.main {
+  background-color: #eeeeee;
+  overflow: scroll;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  padding: 0;
+  margin: 0;
+  min-width: 720px;
+}

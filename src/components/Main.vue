@@ -1,3 +1,16 @@
+<template>
+  <div class="main">
+    <div class="container h-100">
+      <hr>
+      <div class="row">
+        <div class="list-group">
+          <ResultSearchItem v-for="result in checkListGroups" :resultItem="result" :itemType='itemType' />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script lang="js">
 import { ipcRenderer } from 'electron'
 import { defineComponent } from 'vue'
@@ -33,20 +46,6 @@ export default defineComponent({
   }
 })
 </script>
-
-<template>
-  <div class="main">
-    <div class="container h-100">
-      <h2>Основные группы материалов</h2>
-      <hr>
-      <div class="row">
-        <div class="list-group">
-          <ResultSearchItem v-for="result in checkListGroups" :resultItem="result" :itemType='itemType' />
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
 
 <style scoped>
 
@@ -100,19 +99,6 @@ body,html{
   border-radius: 50%;
   color:white;
   text-decoration:none;
-}
-
-.main {
-  background-color: #eeeeee;
-  overflow: scroll;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  z-index: 1;
-  padding: 0;
-  margin: 0;
 }
 
 @media screen and (min-width: 20px) and (max-width: 320px) {
