@@ -1,17 +1,24 @@
 <template>
-  <div class="">
-    <div>
-      <router-view></router-view>
+  <div class="main">
+    <div class="container h-100">
+      <div class="row">
+        <Breadcrumbs />
+      </div>
+      <div class="row">
+        <router-view></router-view>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="js">
 import {defineComponent} from "vue";
+import Breadcrumbs from "./components/Breadcrumbs.vue";
 
 export default defineComponent({
   name: "App",
   components: {
+    Breadcrumbs
   },
   data() {
     return {

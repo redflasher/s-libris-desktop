@@ -1,7 +1,6 @@
 <template>
-  <div class="main">
+  <div class="">
     <div class="container h-100">
-      <hr>
       <div class="row">
         <div class="list-group">
           <ResultSearchItem v-for="result in checkListGroups" :resultItem="result" :itemType='itemType' />

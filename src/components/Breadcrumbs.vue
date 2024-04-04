@@ -1,9 +1,45 @@
+<template>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li v-if="groupName.length > 0" class="breadcrumb-item">
+        <router-link :to="{ name: 'home'}">
+          Каталог
+        </router-link>
+      </li>
+      <li v-else-if="groupName.length === 0" class="breadcrumb-item">
+        Каталог
+      </li>
+
+      <li v-if="groupName.length > 0 && courseName.length > 0" class="breadcrumb-item active">
+        <router-link :to="{ name: 'group', params: {id: groupId}}">
+          {{groupName}}
+        </router-link>
+      </li>
+      <li v-else-if="groupName.length > 0" class="breadcrumb-item">
+        {{groupName}}
+      </li>
+
+      <li v-if="courseName.length > 0 && documentName.length > 0" class="breadcrumb-item">
+        <router-link :to="{ name: 'course', params: {id: courseId}}">
+          {{courseName}}
+        </router-link>
+      </li>
+      <li v-else-if="courseName.length > 0" class="breadcrumb-item">
+        {{courseName}}
+      </li>
+
+      <li v-show="documentName.length > 0" class="breadcrumb-item">{{documentName}}</li>
+
+    </ol>
+  </nav>
+</template>
+
 <script lang="js">
 import { ipcRenderer } from 'electron'
 import { defineComponent } from 'vue'
 
 export default {
-  name: "Breadcrumps",
+  name: "Breadcrumbs",
   data() {
     return {
       groupId: -1,
@@ -81,70 +117,7 @@ export default {
 }
 </script>
 
-<template>
-  <ul class="breadcrumb">
-    <li v-if="groupName.length > 0">
-      <router-link :to="{ name: 'home'}">
-        Группы материалов
-      </router-link>
-    </li>
-    <li v-else-if="groupName.length == 0">
-      Группы материалов
-    </li>
-
-    <li v-if="groupName.length > 0 && courseName.length > 0">
-       <router-link :to="{ name: 'group', params: {id: groupId}}">
-         {{groupName}}
-       </router-link>
-    </li>
-    <li v-else-if="groupName.length > 0">
-      {{groupName}}
-    </li>
-
-    <li v-if="courseName.length > 0 && documentName.length > 0">
-      <router-link :to="{ name: 'course', params: {id: courseId}}">
-        {{courseName}}
-      </router-link>
-    </li>
-    <li v-else-if="courseName.length > 0">
-      {{courseName}}
-    </li>
-
-    <li v-show="documentName.length > 0">{{documentName}}</li>
-  </ul>
-</template>
 
 <style scoped>
-/*хлебные крошки*/
-/* Style the list */
-ul.breadcrumb {
-  padding: 10px 16px;
-  list-style: none;
-  background-color: #eee;
-}
 
-/* Display list items side by side */
-ul.breadcrumb li {
-  display: inline;
-  font-size: 18px;
-}
-
-/* Add a slash symbol (/) before/behind each list item */
-ul.breadcrumb li+li:before {
-  padding: 8px;
-  color: black;
-  content: "/\00a0";
-}
-
-/* Add a color to all links inside the list */
-ul.breadcrumb li a {
-  color: #0275d8;
-  text-decoration: none;
-}
-
-/* Add a color on mouse-over */
-ul.breadcrumb li a:hover {
-  color: #01447e;
-  text-decoration: underline;
-}
 </style>
