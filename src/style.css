@@ -810,3 +810,9 @@ section.docx>footer { z-index: 1; }
   margin: 0;
   min-width: 700px;
 }
+.docName {
+  white-space: nowrap; /* Запрещаем перенос строк */
+  overflow: hidden; /* Обрезаем все, что не помещается в область */
+  /*padding: 5px; !* Поля вокруг текста *!*/
+  text-overflow: ellipsis; /* Добавляем многоточие */
+}

@@ -27,6 +27,7 @@ export default defineComponent({
 
   },
   mounted() {
+    // console.log("resultItem", this.resultItem);
   },
   computed: {
     docType() {
@@ -73,14 +74,18 @@ export default defineComponent({
           break;
         }
         case 'Document': {
-          this.$router.push({ name: 'document', params:
-                {filename: this.resultItem.filename, title: this.resultItem.NAME}
-          });
+          console.log("Document, this.resultItem",  this.resultItem);
+          if(!this.resultItem.hasOwnProperty("FILE_NAME")) {
+            console.log("error:", "ResultSearchItem.vue has not FILE_NAME");
+            console.log("error, this.resultItem:", this.resultItem);
+            return;
+          }
+          this.$router.push({ name: 'document', params: {filename: this.resultItem.FILE_NAME}});
           break;
         }
         case 'DocumentById': {
           this.$router.push({ name: 'document-by-id', params:
-                {id: this.resultItem.ID, title: this.resultItem.NAME}
+                {id: this.resultItem.ID}
           });
           break;
         }

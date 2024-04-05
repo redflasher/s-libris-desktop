@@ -98,11 +98,13 @@ export default defineComponent ({
   methods: {
     goBack(e) {
       if (e.key == 'Escape') {
-        window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
+        if(this.$route.name === 'search-by-name') {
+          window.history.length > 1 ? this.$router.go(-1) : this.$router.push({name: 'home'});
+        }
       }
     },
     goBackBtn() {
-      window.history.length > 1 ? this.$router.go(-1) : this.$router.push('/')
+      window.history.length > 1 ? this.$router.go(-1) : this.$router.push({ name: 'home'});
     },
     autoSearch() {
       if (this.searhTextModel.length < 1) return;

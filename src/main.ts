@@ -27,7 +27,7 @@ const routes = [
     { path: '/search-by-name', name: 'search-by-name', component: ByNameSearchPage },
     { path: '/group/:id', name: 'group', component: Group },
     { path: '/course/:id', name: 'course', component: Course },
-    { path: '/document/:filename/:title', name: 'document', component: Document },
+    { path: '/document/:filename', name: 'document', component: Document },
     { path: '/document/:id', name: 'document-by-id', component: Document },
 ]
 
