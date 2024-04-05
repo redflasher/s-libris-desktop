@@ -54,7 +54,7 @@ function getMenu() {
                 { label: 'Увеличить',role: 'zoomIn' , accelerator: process.platform === 'darwin' ? 'Cmd+up' : 'Ctrl+up',},
                 { label: 'Уменьшить', role: 'zoomOut' , accelerator: process.platform === 'darwin' ? 'Cmd+down' : 'Ctrl+down',},
                 { type: 'separator' },
-                { label: 'Полный экран', role: 'togglefullscreen', accelerator: 'F11' }
+                { label: 'На весь экран', role: 'togglefullscreen', accelerator: 'F11' }
             ]
         },
         {
@@ -67,6 +67,7 @@ function getMenu() {
                         * Можно страницу, разделенную на несколько столбцов,
                         * наподобие как на маках.
                         * */
+                        win.webContents.send("mainToRender", "goto:home");
                     }
                 },
                 { label: 'По названию документов',
@@ -85,33 +86,36 @@ function getMenu() {
                         * */
                     }
                 },
-                { label: 'По содержимому документов',
-                    click: async () => {
-                        /*
-                        * тут опции:
-                        * доп. ограничения по дате,
-                        * по типу документа,
-                        * по диапазону годов.
-                        *
-                        * Фильтрация по типу документов.
-                        * Сортировка по алфавиту, по дате, по объему текста.
-                        * */
-                        // const { shell } = require('electron')
-                        // await shell.openExternal('https://slibris.ru')
-                    }
-                },
-                { label: 'По календарю',
-                    click: async () => {
-                        /*
-                        * Тут календарь с количеством документов за каждый год и за каждый месяц,
-                        * по мере погружения в календарь.
-                        *
-                        * Фильтрация по типу документов.
-                        * */
-                        // const { shell } = require('electron')
-                        // await shell.openExternal('https://slibris.ru')
-                    }
-                },
+                /*{ label: 'По содержимому документов',
+                  enabled: false,
+                  accelerator: process.platform === 'darwin' ? 'Cmd+Shift+F' : 'Ctrl+Shift+F',
+                  click: async () => {
+                  /!*
+                  * тут опции:
+                  * доп. ограничения по дате,
+                  * по типу документа,
+                  * по диапазону годов.
+                  *
+                  * Фильтрация по типу документов.
+                  * Сортировка по алфавиту, по дате, по объему текста.
+                  * *!/
+                    // const { shell } = require('electron')
+                    // await shell.openExternal('https://slibris.ru')
+                  }
+                },*/
+                /*{ label: 'По календарю',
+                  enabled: false,
+                  click: async () => {
+                  /!*
+                  * Тут календарь с количеством документов за каждый год и за каждый месяц,
+                  * по мере погружения в календарь.
+                  *
+                  * Фильтрация по типу документов.
+                  * *!/
+                    // const { shell } = require('electron')
+                    // await shell.openExternal('https://slibris.ru')
+                  }
+                },*/
 
             ]
         },
