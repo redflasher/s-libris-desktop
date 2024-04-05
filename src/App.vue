@@ -42,6 +42,10 @@ export default defineComponent({
           this.$router.push({ name: 'search-by-name'});
           break;
         }
+        case "goto:home": {
+          this.$router.push({ name: 'home'});
+          break;
+        }
       }
     }
   }

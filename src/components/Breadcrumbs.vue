@@ -72,7 +72,7 @@ export default {
       return this.route.name === 'home';
     },
     isShowSearchByNameLink() {
-      return this.routeHistory[this.routeHistory.length - 2] === 'search-by-name';
+      return this.routeHistory[this.routeHistory.length - 1] === 'search-by-name';
     },
     isShowCourse() {
       if(this.courseName === undefined || this.documentName === undefined) return false;
@@ -86,7 +86,9 @@ export default {
   },
   watch: {
     route (to, from) {
-      this.routeHistory.push(to.name);
+      if(to.name === 'home') {
+        this.routeHistory.push(to.name);
+      }
       let self = this;
       switch(to.name) {
         case "document-by-id": {
