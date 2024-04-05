@@ -26,7 +26,10 @@ export default defineComponent({
 
       ipcRenderer.invoke('loadDocxFileById', this.$route.params.id)
           .then(dataBlob => this.docBlobRenderToPage(dataBlob))
-          .catch(e => console.log("catch: Document.loadDocxFileById", e));
+          .catch(e => {
+            console.log("catch: Document.loadDocxFileById", e);
+            self.$router.push({name: "404"});
+          });
     } else {
       if(!this.$route.params.hasOwnProperty("filename")) {
         console.log("error:", "Document.vue has not filename");
@@ -36,7 +39,10 @@ export default defineComponent({
 
       ipcRenderer.invoke('loadDocxFileByFilename', this.$route.params.filename)
           .then(dataBlob => this.docBlobRenderToPage(dataBlob))
-          .catch(e => console.log("catch: Document.loadDocxFileByFilename", e));
+          .catch(e => {
+            console.log("catch: Document.loadDocxFileByFilename", e);
+            self.$router.push({name: "404"});
+          });
     }
   },
   methods: {

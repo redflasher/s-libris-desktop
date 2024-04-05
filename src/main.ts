@@ -8,6 +8,7 @@ import Group from "./components/Group.vue";
 import Course from "./components/Course.vue";
 import Document from "./components/Document.vue";
 import ByNameSearchPage from "./components/ByNameSearchPage.vue";
+import Page_404 from "./components/Page_404.vue";
 // Import our custom CSS
 import './scss/styles.scss'
 // Import all of Bootstrap's JS
@@ -29,6 +30,7 @@ const routes = [
     { path: '/course/:id', name: 'course', component: Course },
     { path: '/document/:filename', name: 'document', component: Document },
     { path: '/document/:id', name: 'document-by-id', component: Document },
+    { path: '/404', name: '404', component: Page_404 },
 ]
 
 // 3. Создайте экземпляр маршрутизатора и передайте ему опцию `routes`

@@ -356,6 +356,7 @@ function createWindow() {
     });
 
     if(process.argv.length > 1 && process.argv[1] === "--dev") {
+        console.log("dev mode");
         win.webContents.openDevTools()
     }
 
