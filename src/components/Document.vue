@@ -104,8 +104,7 @@ const count = ref(0)
  -->
   <!-- end styles -->
   <div class="">
-    <h5>{{ this.$route.params.title}}</h5>
-    <div class="d-flex ">
+    <div class="">
       <div id="docxViewer"></div>
     </div>
   </div>
