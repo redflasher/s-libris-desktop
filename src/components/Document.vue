@@ -16,12 +16,27 @@ export default defineComponent({
   },
   mounted() {
     let self = this;
+    // console.log("Document.mounted.this.$route.params", this.$route.params);
     if(this.$route.params.hasOwnProperty("id")) {
+      if(!this.$route.params.hasOwnProperty("id")) {
+        console.log("error:", "Document.vue has not id");
+        console.log("error, this.$route.params:", this.$route.params);
+        return;
+      }
+
       ipcRenderer.invoke('loadDocxFileById', this.$route.params.id)
-          .then(dataBlob => this.docBlobRenderToPage(dataBlob));
+          .then(dataBlob => this.docBlobRenderToPage(dataBlob))
+          .catch(e => console.log("catch: Document.loadDocxFileById", e));
     } else {
+      if(!this.$route.params.hasOwnProperty("filename")) {
+        console.log("error:", "Document.vue has not filename");
+        console.log("error, this.$route.params:", this.$route.params);
+        return;
+      }
+
       ipcRenderer.invoke('loadDocxFileByFilename', this.$route.params.filename)
-          .then(dataBlob => this.docBlobRenderToPage(dataBlob));
+          .then(dataBlob => this.docBlobRenderToPage(dataBlob))
+          .catch(e => console.log("catch: Document.loadDocxFileByFilename", e));
     }
   },
   methods: {

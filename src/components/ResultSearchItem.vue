@@ -99,10 +99,4 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.docName {
-  white-space: nowrap; /* Запрещаем перенос строк */
-  overflow: hidden; /* Обрезаем все, что не помещается в область */
-  padding: 5px; /* Поля вокруг текста */
-  text-overflow: ellipsis; /* Добавляем многоточие */
-}
 </style>
