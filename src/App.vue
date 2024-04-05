@@ -2,7 +2,7 @@
   <div class="main">
     <div class="container h-100">
       <div class="row">
-<!--        <Breadcrumbs />-->
+        <Breadcrumbs />
       </div>
       <div class="row">
         <router-view></router-view>
@@ -40,10 +40,6 @@ export default defineComponent({
       switch (event.data) {
         case "show:ByNameSearchPage": {
           this.$router.push({ name: 'search-by-name'});
-          break;
-        }
-        case "goto:home": {
-          this.$router.push({ name: 'home'});
           break;
         }
       }

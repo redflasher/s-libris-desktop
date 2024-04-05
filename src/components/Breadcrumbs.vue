@@ -1,34 +1,41 @@
 <template>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li v-if="groupName.length > 0" class="breadcrumb-item">
+      <li v-if="isShowCatalogLinkDisabled" class="breadcrumb-item active">
+        Каталог
+      </li>
+
+      <li v-if="isShowCatalogLink" class="breadcrumb-item">
         <router-link :to="{ name: 'home'}">
           Каталог
         </router-link>
       </li>
-      <li v-else-if="groupName.length === 0" class="breadcrumb-item">
-        Каталог
+
+      <li v-show="isShowSearchByNameLink" class="breadcrumb-item">
+        <router-link :to="{ name: 'search-by-name'}">
+          Поиск по названию
+        </router-link>
       </li>
 
       <li v-if="groupName.length > 0 && courseName.length > 0" class="breadcrumb-item active">
         <router-link :to="{ name: 'group', params: {id: groupId}}">
-          {{groupName}}
+          {{preparedTitle(groupName)}}
         </router-link>
       </li>
       <li v-else-if="groupName.length > 0" class="breadcrumb-item">
-        {{groupName}}
+        {{preparedTitle(groupName)}}
       </li>
 
-      <li v-if="courseName.length > 0 && documentName.length > 0" class="breadcrumb-item">
+      <li v-if="isShowCourse" class="breadcrumb-item">
         <router-link :to="{ name: 'course', params: {id: courseId}}">
-          {{courseName}}
+          {{preparedTitle(courseName)}}
         </router-link>
       </li>
       <li v-else-if="courseName.length > 0" class="breadcrumb-item">
-        {{courseName}}
+        {{preparedTitle(courseName)}}
       </li>
 
-      <li v-show="documentName.length > 0" class="breadcrumb-item">{{documentName}}</li>
+      <li v-show="isShowDocumentName" class="breadcrumb-item docName">{{preparedTitle(documentName)}}</li>
 
     </ol>
   </nav>
@@ -42,6 +49,7 @@ export default {
   name: "Breadcrumbs",
   data() {
     return {
+      routeHistory: [],
       groupId: -1,
       courseId: -1,
       documentId: -1,
@@ -55,12 +63,41 @@ export default {
     route() {
       return this.$route;
     },
+    isShowCatalogLink() {
+      return !this.isShowCatalogLinkDisabled ||
+          this.isShowSearchByNameLink ||
+          this.groupId > -1 || this.courseId > -1 || this.documentId > -1;
+    },
+    isShowCatalogLinkDisabled() {
+      return this.route.name === 'home';
+    },
+    isShowSearchByNameLink() {
+      return this.routeHistory[this.routeHistory.length - 2] === 'search-by-name';
+    },
+    isShowCourse() {
+      if(this.courseName === undefined || this.documentName === undefined) return false;
+      return this.courseName.length > 0 && this.documentName.length > 0;
+    },
+    isShowDocumentName() {
+      if(this.documentName === undefined) return false;
+      return this.documentName.length > 0;
+    },
+
   },
   watch: {
     route (to, from) {
-      console.log("route to.name", to, to.params.id);
+      this.routeHistory.push(to.name);
       let self = this;
       switch(to.name) {
+        case "document-by-id": {
+          self.groupId = -1;
+          self.courseId = -1;
+          self.documentId = to.params.id;
+          ipcRenderer.invoke('getDocumentName', to.params.id).then(_documentName => {
+            self.documentName = _documentName;
+            // console.log("_documentName", _documentName);
+          });
+        }
         case "home": {
           self.groupId = -1;
           self.groupName = '';
@@ -113,6 +150,16 @@ export default {
     }
   },
   mounted() {
+  },
+  methods: {
+    preparedTitle(_val) {
+      if(_val === undefined) return "---";
+      let result = _val;
+      result = result.toLowerCase();
+      result = result.replace(/[^a-zA-Zа-яА-ЯёЁ0-9:.,;:&%?!#$+-\/\]\[() ]/g, "");
+      result = result.charAt(0).toUpperCase() + result.slice(1);
+      return result;
+    }
   }
 }
 </script>
