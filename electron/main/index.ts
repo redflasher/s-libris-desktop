@@ -118,11 +118,12 @@ function getMenu() {
           * */
           }
         },
-        /*{ label: 'По содержимому документов',
-          enabled: false,
+        { label: 'По содержимому документов',
+          enabled: true,
           accelerator: process.platform === 'darwin' ? 'Cmd+Shift+F' : 'Ctrl+Shift+F',
           click: async () => {
-          /!*
+            win.webContents.send("mainToRender", "show:FulltextSearchPage");
+          /*
           * тут опции:
           * доп. ограничения по дате,
           * по типу документа,
@@ -130,11 +131,11 @@ function getMenu() {
           *
           * Фильтрация по типу документов.
           * Сортировка по алфавиту, по дате, по объему текста.
-          * *!/
+          * */
             // const { shell } = require('electron')
             // await shell.openExternal('https://slibris.ru')
           }
-        },*/
+        },
         /*{ label: 'По календарю',
           enabled: false,
           click: async () => {

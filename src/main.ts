@@ -8,6 +8,7 @@ import Group from "./components/Group.vue";
 import Course from "./components/Course.vue";
 import Document from "./components/Document.vue";
 import ByNameSearchPage from "./components/ByNameSearchPage.vue";
+import FulltextSearchPage from "./components/FulltextSearchPage.vue";
 import Page_404 from "./components/Page_404.vue";
 // Import our custom CSS
 import './scss/styles.scss'
@@ -26,6 +27,7 @@ import * as bootstrap from '../node_modules/bootstrap';
 const routes = [
     { path: '/', name: 'home', component: Main },
     { path: '/search-by-name', name: 'search-by-name', component: ByNameSearchPage },
+    { path: '/search-fulltext', name: 'search-fulltext', component: FulltextSearchPage },
     { path: '/group/:id', name: 'group', component: Group },
     { path: '/course/:id', name: 'course', component: Course },
     { path: '/document/:filename', name: 'document', component: Document },
